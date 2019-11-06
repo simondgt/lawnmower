@@ -1,2 +1,2 @@
 # lawnmower
-Short coding exercice written in Java 8
+Short coding exercice written in Java 11
