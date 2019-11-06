@@ -2,14 +2,38 @@ package org.lawnmower;
 
 import java.util.function.BiPredicate;
 
+/**
+ * This class describe the API and the state related to a lawnmower
+ */
 public class Lawnmower {
 
+    /**
+     * Current position X of the device
+     */
     private long x;
+
+    /**
+     * Current position Y of the device
+     */
     private long y;
+
+    /**
+     * Current direction of the device
+     */
     private char direction;
 
+    /**
+     * Reference to the minimalistic surface API. It enables to ask if a new position is valid.
+     */
     private final BiPredicate<Long, Long> surfaceTest;
 
+    /**
+     * Create a new Lawnmower with initial position and direction. A valid reference to a surface tester is required
+     * @param initX Initial X position of the device
+     * @param initY Initial Y position of the device
+     * @param initDirection Initial direction of the device
+     * @param surfaceTest Reference to the surface tester API
+     */
     public Lawnmower(long initX, long initY, char initDirection, BiPredicate<Long, Long> surfaceTest){
 
         if(initX < 0){
@@ -43,24 +67,39 @@ public class Lawnmower {
 
     }
 
+    /**
+     * Get current X position
+     * @return
+     */
     public long getX(){
 
         return x;
 
     }
 
+    /**
+     * Get current Y position
+     * @return
+     */
     public long getY(){
 
         return y;
 
     }
 
+    /**
+     * Get current direction of device
+     * @return
+     */
     public char getDirection(){
 
         return direction;
 
     }
 
+    /**
+     * Update direction of device based on previous direction.
+     */
     public void turnLeft(){
 
         switch(direction){
@@ -84,6 +123,9 @@ public class Lawnmower {
 
     }
 
+    /**
+     * Update direction of device based on previous direction.
+     */
     public void turnRight(){
 
         switch(direction){
@@ -107,6 +149,9 @@ public class Lawnmower {
 
     }
 
+    /**
+     * Try to advance the device. The movement is committed only if the surface tester accepts the new coordinates.
+     */
     public void advance(){
 
         long[]  newCoordinates = computeNewCoordinates();
@@ -119,6 +164,10 @@ public class Lawnmower {
 
     }
 
+    /**
+     * Compute new coordinates based on current direction and position
+     * @return a array of size 2, first element contains new X position, second element contains Y position
+     */
     private long[] computeNewCoordinates(){
 
         switch(direction){
