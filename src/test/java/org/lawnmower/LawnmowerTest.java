@@ -130,6 +130,91 @@ public class LawnmowerTest {
 
         }
 
+        // We apply the same commands than before, but with executeCommand function
+        {
+            Lawnmower lm = new Lawnmower(5, 10, 'W', (x, y) -> true);
+            assertEquals(5, lm.getX());
+            assertEquals(10, lm.getY());
+            assertEquals('W', lm.getDirection());
+
+            // Finally, we play with the API in order to check if the lawnmower can execute commands properly
+            lm.executeCommand('A');
+            assertEquals(4, lm.getX());
+            assertEquals(10, lm.getY());
+            assertEquals('W', lm.getDirection());
+
+            lm.executeCommand('G');
+            assertEquals(4, lm.getX());
+            assertEquals(10, lm.getY());
+            assertEquals('S', lm.getDirection());
+
+            lm.executeCommand('A');
+            assertEquals(4, lm.getX());
+            assertEquals(9, lm.getY());
+            assertEquals('S', lm.getDirection());
+
+            lm.executeCommand('G');
+            assertEquals(4, lm.getX());
+            assertEquals(9, lm.getY());
+            assertEquals('E', lm.getDirection());
+
+            lm.executeCommand('A');
+            assertEquals(5, lm.getX());
+            assertEquals(9, lm.getY());
+            assertEquals('E', lm.getDirection());
+
+            lm.executeCommand('G');
+            assertEquals(5, lm.getX());
+            assertEquals(9, lm.getY());
+            assertEquals('N', lm.getDirection());
+
+            lm.executeCommand('A');
+            assertEquals(5, lm.getX());
+            assertEquals(10, lm.getY());
+            assertEquals('N', lm.getDirection());
+
+            lm.executeCommand('G');
+            assertEquals(5, lm.getX());
+            assertEquals(10, lm.getY());
+            assertEquals('W', lm.getDirection());
+
+            lm.executeCommand('A');
+            assertEquals(4, lm.getX());
+            assertEquals(10, lm.getY());
+            assertEquals('W', lm.getDirection());
+
+            lm.executeCommand('D');
+            assertEquals(4, lm.getX());
+            assertEquals(10, lm.getY());
+            assertEquals('N', lm.getDirection());
+
+            lm.executeCommand('D');
+            assertEquals(4, lm.getX());
+            assertEquals(10, lm.getY());
+            assertEquals('E', lm.getDirection());
+
+            lm.executeCommand('D');
+            assertEquals(4, lm.getX());
+            assertEquals(10, lm.getY());
+            assertEquals('S', lm.getDirection());
+
+            lm.executeCommand('D');
+            assertEquals(4, lm.getX());
+            assertEquals(10, lm.getY());
+            assertEquals('W', lm.getDirection());
+
+            try {
+
+                lm.executeCommand('F');
+                fail("executeCommand must fail when parameter not in A, G or D");
+
+            }catch(IllegalArgumentException e){
+
+                assertEquals("Bad command F", e.getMessage());
+
+            }
+        }
+
 
     }
 

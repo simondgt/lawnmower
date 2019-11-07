@@ -189,5 +189,28 @@ public class Lawnmower {
 
     }
 
+    public void executeCommand(char command){
+
+        switch(command){
+
+            case 'G':
+                turnLeft();
+                return;
+
+            case 'D':
+                turnRight();
+                return;
+
+            case 'A':
+                advance();
+                return;
+
+            default:
+                throw new IllegalArgumentException("Bad command " + command);
+
+        }
+
+    }
+
 
 }
