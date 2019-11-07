@@ -58,7 +58,7 @@ public class StoryTest {
         Program p1 = new Program(1,1,'E', "A", tester);
         Story story = new Story(tester, Arrays.asList(p1));
         String out = story.run();
-        assertEquals("2 1 E\n", out);
+        assertEquals("2 1 E", out);
 
     }
 
@@ -70,7 +70,7 @@ public class StoryTest {
         Program p1 = new Program(1,1,'E', "AAADAGGA", tester);
         Story story = new Story(tester, Arrays.asList(p1));
         String out = story.run();
-        assertEquals("4 1 N\n", out);
+        assertEquals("4 1 N", out);
 
     }
 
@@ -82,7 +82,7 @@ public class StoryTest {
         Program p1 = new Program(1,1,'E', "AAADAGGA", tester);
         Story story = new Story(tester, Arrays.asList(p1));
         String out = story.run();
-        assertEquals("3 1 N\n", out);
+        assertEquals("3 1 N", out);
 
     }
 
@@ -95,7 +95,7 @@ public class StoryTest {
         Program p2 = new Program(0,0,'N', "GAAAAADA", tester);
         Story story = new Story(tester, Arrays.asList(p1, p2));
         String out = story.run();
-        assertEquals("3 1 N\n0 1 N\n", out);
+        assertEquals("3 1 N\n0 1 N", out);
 
     }
 

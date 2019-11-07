@@ -3,10 +3,17 @@ package org.lawnmower;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.function.BiPredicate;
 
+/**
+ * This builder is in charge of constructing a new story from an input stream (string iterator)
+ */
 public class StoryBuilder {
 
+    /**
+     * Helper struct that will be used internally in order to represent the initial position of a lawnmower
+     */
     private static class Init{
 
         public final long x;
@@ -21,44 +28,172 @@ public class StoryBuilder {
 
         }
 
-
     }
 
+    /**
+     *  Construct a story by reading content in a string iterator
+     * @param dataSource string iterator that contains all the inputs required in order to setup a Story.
+     * @return a new Story simulation, based on dataSource
+     */
     public static Story newStory(Iterator<String> dataSource){
 
+        //creation of the lawn surface
         BiPredicate<Long, Long> surfaceTester = null;
         if(dataSource.hasNext()) {
+
             long[] size = readSurface(dataSource.next());
             surfaceTester = new SurfaceTester(size[0], size[1]);
+
         }
 
-
-        boolean hasMorePrograms = true;
+        //then, fetch lines two by two and build programs out of them
+        boolean hasMorePrograms = dataSource.hasNext();
         List<Program> programs = new ArrayList<>();
 
         while(hasMorePrograms){
 
+            //that line contains the initial state of the lawnmower
             Init init = readInit(dataSource.next());
-            String instructions = dataSource.next();
-
             hasMorePrograms = dataSource.hasNext();
-            programs.add(new Program( init.x, init.y, init.direction,instructions,surfaceTester));
+
+            if(hasMorePrograms) {
+
+                //that line contains the instructions to apply to the lawnmower
+                String instructions = dataSource.next();
+                hasMorePrograms = dataSource.hasNext();
+                programs.add(new Program(init.x, init.y, init.direction, instructions, surfaceTester));
+
+            }
+
         }
 
         return new Story(surfaceTester,programs);
 
     }
 
+    /**
+     * That helper method converts a string into 2 long values, separated by spaces.
+     * Here we can handle several spaces delimiter, and we can catch several bad cases during parsing.
+     * If the parsing doesn't go well, we trow an IllegalArgumentException
+     * @param line line to parse
+     * @return two long numbers packed into a long[2]
+     */
     private static long[] readSurface(String line){
 
-        String[] array = line.split(" ");
-        return new long[]{Long.parseLong(array[0]),Long.parseLong(array[1])};
+        long x, y;
+        StringTokenizer tokenizer = new StringTokenizer(line, " ", false);
+
+        if(tokenizer.hasMoreTokens()){
+
+            try {
+
+                x = Long.parseLong(tokenizer.nextToken().trim());
+
+            }catch(NumberFormatException e){
+
+                throw new IllegalArgumentException("ParseError : Input doesn't respect the specification : " + line );
+
+            }
+
+        } else {
+
+            throw new IllegalArgumentException("ParseError : Input doesn't respect the specification : " + line );
+
+        }
+
+        if(tokenizer.hasMoreTokens()){
+
+            try {
+
+                y = Long.parseLong(tokenizer.nextToken().trim());
+
+            }catch(NumberFormatException e){
+
+                throw new IllegalArgumentException("ParseError : Input doesn't respect the specification : " + line );
+
+            }
+
+        } else {
+
+            throw new IllegalArgumentException("ParseError : Input doesn't respect the specification : " + line );
+
+        }
+
+        return new long[]{x,y};
 
     }
 
+    /**
+     * That Helper method converts a string into a lawnmower initial state.
+     * Here we can handle several spaces delimiter, and we can catch several bad cases during parsing.
+     * If the parsing doesn't go well, we trow an IllegalArgumentException
+     * @param line line to parse
+     * @return an lawnmower initial state
+     */
     private static Init readInit(String line){
-        String[] array = line.split(" ");
-        return new Init(Long.parseLong(array[0]), Long.parseLong(array[1]), array[2].charAt(0));
+
+        long x,y;
+        char direction;
+
+        StringTokenizer tokenizer = new StringTokenizer(line, " ", false);
+
+        if(tokenizer.hasMoreTokens()){
+
+            try {
+
+                x = Long.parseLong(tokenizer.nextToken().trim());
+
+            }catch(NumberFormatException e){
+
+                throw new IllegalArgumentException("ParseError bad x : Input doesn't respect the specification : " + line );
+
+            }
+
+        } else {
+
+            throw new IllegalArgumentException("ParseError bad x : Input doesn't respect the specification : " + line );
+
+        }
+
+        if(tokenizer.hasMoreTokens()){
+
+            try {
+
+                y = Long.parseLong(tokenizer.nextToken().trim());
+
+            }catch(NumberFormatException e){
+
+                throw new IllegalArgumentException("ParseError bad y : Input doesn't respect the specification : " + line );
+
+            }
+
+        } else {
+
+            throw new IllegalArgumentException("ParseError bad y : Input doesn't respect the specification : " + line );
+
+        }
+
+        if(tokenizer.hasMoreTokens()){
+
+            String directionToken = tokenizer.nextToken().trim();
+            if("NSEW".contains(directionToken)){
+
+                direction = directionToken.charAt(0);
+
+            } else {
+
+                throw new IllegalArgumentException("ParseError bad direction: Input doesn't respect the specification : " + line );
+
+            }
+
+
+        } else {
+
+            throw new IllegalArgumentException("ParseError bad direction : Input doesn't respect the specification : " + line );
+
+        }
+
+        return new Init(x,y,direction);
 
     }
 

@@ -68,12 +68,17 @@ public class Story {
 
             }
 
+            if(builder.length() > 0){
+
+                builder.append("\n");
+
+            }
+
             builder.append(lm.getX())
                     .append(" ")
                     .append(lm.getY())
                     .append(" ")
-                    .append(lm.getDirection())
-                    .append("\n");
+                    .append(lm.getDirection());
 
         }
 
