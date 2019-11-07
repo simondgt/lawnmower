@@ -34,7 +34,7 @@ public class StoryBuilder {
 
 
         boolean hasMorePrograms = true;
-        List<LawnmowerProgram> programs = new ArrayList<>();
+        List<Program> programs = new ArrayList<>();
 
         while(hasMorePrograms){
 
@@ -42,7 +42,7 @@ public class StoryBuilder {
             String instructions = dataSource.next();
 
             hasMorePrograms = dataSource.hasNext();
-            programs.add(new LawnmowerProgram( init.x, init.y, init.direction,instructions));
+            programs.add(new Program( init.x, init.y, init.direction,instructions,surfaceTester));
         }
 
         return new Story(surfaceTester,programs);

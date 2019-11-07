@@ -189,6 +189,11 @@ public class Lawnmower {
 
     }
 
+    /**
+     * API that enables to control a lawnmower with simple characters commands.
+     * 'A' makes the device advance, 'D' makes it turn right and 'G' makes it turn left.
+     * @param command the command to execute.
+     */
     public void executeCommand(char command){
 
         switch(command){
