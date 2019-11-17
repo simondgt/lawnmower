@@ -82,14 +82,6 @@ public class LawnProgramTest {
         assertEquals('E', p.getInitDirection());
         assertEquals(1, p.getInitX());
         assertEquals(6, p.getInitY());
-        assertTrue(p.hasNext());
-        assertEquals('A', (char) p.next());
-        assertTrue(p.hasNext());
-        assertEquals('D', (char) p.next());
-        assertTrue(p.hasNext());
-        assertEquals('D', (char) p.next());
-        assertTrue(p.hasNext());
-        assertEquals('G', (char) p.next());
-        assertFalse(p.hasNext());
+        assertEquals("ADDG", p.getInstructions());
     }
 }

@@ -2,14 +2,11 @@ package org.lawnmower.simulation.program;
 
 import org.lawnmower.simulation.world.Lawn;
 
-import java.util.Iterator;
-
 /**
  * A program contains all the information needed to setup and move a lawnmower.
- * It can be consume by a Story as an iterator of characters. Every character will be interpreted as a command
- * for the lawnmower.
+ * One can use the getInstructions method to retrieve all the instructions that need to be executed
  */
-public class LawnProgram implements Iterator<Character> {
+public class LawnProgram {
 
     /**
      * Initial X position of Lawnmower
@@ -30,11 +27,6 @@ public class LawnProgram implements Iterator<Character> {
      * Initial direction of the lawnmower
      */
     private final char initDirection;
-
-    /**
-     * Current position in instructions
-     */
-    private int idx;
 
     /**
      * Creates a new program that will contain valid commands in order to pilot a lawnmower
@@ -79,7 +71,6 @@ public class LawnProgram implements Iterator<Character> {
         this.initY = initY;
         this.instructions = instructions;
         this.initDirection = initDir;
-        idx = 0;
     }
 
     /**
@@ -110,22 +101,10 @@ public class LawnProgram implements Iterator<Character> {
     }
 
     /**
-     * Check if new commands are still a still available
-     *
-     * @return whether a new command is available
+     * Returns instructions that can the be processed one at a time in order to execute the program
+     * @return
      */
-    @Override
-    public boolean hasNext() {
-        return idx < instructions.length();
-    }
-
-    /**
-     * Returns new command to be interpreted
-     *
-     * @return new command ( guaranteed to be only 'A', 'D' or 'G')
-     */
-    @Override
-    public Character next() {
-        return instructions.charAt(idx++);
+    public String getInstructions() {
+        return instructions;
     }
 }

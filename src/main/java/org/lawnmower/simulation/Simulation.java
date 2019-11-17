@@ -55,8 +55,8 @@ public class Simulation {
         StringBuilder builder = new StringBuilder();
         for (LawnProgram pg : lawnPrograms) {
             Lawnmower lm = new Lawnmower(pg.getInitX(), pg.getInitY(), pg.getInitDirection(), lawn);
-            while (pg.hasNext()) {
-                lm.executeCommand(pg.next());
+            for(int i = 0; i < pg.getInstructions().length(); i++) {
+                lm.executeCommand(pg.getInstructions().charAt(i));
             }
 
             if (builder.length() > 0) {
