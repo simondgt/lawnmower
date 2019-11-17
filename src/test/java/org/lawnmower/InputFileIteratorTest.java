@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 public class InputFileIteratorTest {
 
     @Test
-    public void testBadFile() {
+    public void should_ThrowException_When_FileNotFound() {
         try {
             new InputFIleIterator(new File("test/bad"));
             fail("file doesn't exits");
@@ -21,7 +21,7 @@ public class InputFileIteratorTest {
     }
 
     @Test
-    public void testIterator() {
+    public void should_IterateThroughFile_When_FileExists() {
         try {
             Iterator<String> iterator = new InputFIleIterator(new File("test/input1"));
             assertTrue(iterator.hasNext());

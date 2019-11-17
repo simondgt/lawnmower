@@ -8,190 +8,328 @@ import static org.junit.Assert.fail;
 public class LawnmowerTest {
 
     @Test
-    public void lawnmowerApiTest() {
-        // First of all, we check if the constructor can catch bad cases
+    public void should_ThrowException_When_Instantiated_With_NegativesCoordinates() {
+        //negative initX
         try {
-            new Lawnmower(-1, 0, 'N', (x, y) -> true);
+            new Lawnmower(-1, 0, 'N', new SurfaceTester(100, 100));
             fail("Constructor preconditions must throw an exception here.");
         } catch (IllegalArgumentException e) {
             assertEquals("Value of X (-1) must be positive.", e.getMessage());
         }
 
+        //negative initY
         try {
-            new Lawnmower(0, -1, 'N', (x, y) -> true);
+            new Lawnmower(0, -1, 'N', new SurfaceTester(100, 100));
             fail("Constructor preconditions must throw an exception here.");
         } catch (IllegalArgumentException e) {
             assertEquals("Value of Y (-1) must be positive.", e.getMessage());
         }
+    }
 
+    @Test
+    public void should_ThrowException_When_Instantiated_With_BadDirection() {
+        //C is not a valid direction
         try {
-            new Lawnmower(0, 0, 'C', (x, y) -> true);
+            new Lawnmower(0, 0, 'C', new SurfaceTester(100, 100));
             fail("Constructor preconditions must throw an exception here.");
         } catch (IllegalArgumentException e) {
             assertEquals("Value of Direction (C) must be N, E W or S.", e.getMessage());
         }
+    }
 
+    @Test
+    public void should_ThrowException_When_Instantiated_With_NullSurfaceTest() {
         try {
             new Lawnmower(0, 0, 'W', null);
             fail("Constructor preconditions must throw an exception here.");
         } catch (IllegalArgumentException e) {
             assertEquals("Surface Tester can't be null.", e.getMessage());
         }
+    }
 
-        {
-            // Then, we check if the constructor initialize the lawnmower properly
-            Lawnmower lm = new Lawnmower(5, 10, 'W', (x, y) -> true);
-            assertEquals(5, lm.getX());
-            assertEquals(10, lm.getY());
-            assertEquals('W', lm.getDirection());
+    @Test
+    public void should_InitializeMembers_When_Instantiated() {
+        //we compare constructor parameters with getter results
+        Lawnmower lm = new Lawnmower(5, 10, 'W', new SurfaceTester(100, 100));
+        assertEquals(5, lm.getX());
+        assertEquals(10, lm.getY());
+        assertEquals('W', lm.getDirection());
+    }
 
-            // Finally, we play with the API in order to check if the lawnmower can execute commands properly
-            lm.advance();
-            assertEquals(4, lm.getX());
-            assertEquals(10, lm.getY());
-            assertEquals('W', lm.getDirection());
+    @Test
+    public void should_ThrowException_When_BadCommand() {
 
-            lm.turnLeft();
-            assertEquals(4, lm.getX());
-            assertEquals(10, lm.getY());
-            assertEquals('S', lm.getDirection());
-
-            lm.advance();
-            assertEquals(4, lm.getX());
-            assertEquals(9, lm.getY());
-            assertEquals('S', lm.getDirection());
-
-            lm.turnLeft();
-            assertEquals(4, lm.getX());
-            assertEquals(9, lm.getY());
-            assertEquals('E', lm.getDirection());
-
-            lm.advance();
-            assertEquals(5, lm.getX());
-            assertEquals(9, lm.getY());
-            assertEquals('E', lm.getDirection());
-
-            lm.turnLeft();
-            assertEquals(5, lm.getX());
-            assertEquals(9, lm.getY());
-            assertEquals('N', lm.getDirection());
-
-            lm.advance();
-            assertEquals(5, lm.getX());
-            assertEquals(10, lm.getY());
-            assertEquals('N', lm.getDirection());
-
-            lm.turnLeft();
-            assertEquals(5, lm.getX());
-            assertEquals(10, lm.getY());
-            assertEquals('W', lm.getDirection());
-
-            lm.advance();
-            assertEquals(4, lm.getX());
-            assertEquals(10, lm.getY());
-            assertEquals('W', lm.getDirection());
-
-            lm.turnRight();
-            assertEquals(4, lm.getX());
-            assertEquals(10, lm.getY());
-            assertEquals('N', lm.getDirection());
-
-            lm.turnRight();
-            assertEquals(4, lm.getX());
-            assertEquals(10, lm.getY());
-            assertEquals('E', lm.getDirection());
-
-            lm.turnRight();
-            assertEquals(4, lm.getX());
-            assertEquals(10, lm.getY());
-            assertEquals('S', lm.getDirection());
-
-            lm.turnRight();
-            assertEquals(4, lm.getX());
-            assertEquals(10, lm.getY());
-            assertEquals('W', lm.getDirection());
-
+        Lawnmower lm = new Lawnmower(5, 10, 'W', new SurfaceTester(100, 100));
+        try {
+            //the only valid commands are G, D and A
+            lm.executeCommand('F');
+            fail("executeCommand must fail when parameter not in A, G or D");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Bad command F", e.getMessage());
         }
+    }
 
-        // We apply the same commands than before, but with executeCommand function
-        {
-            Lawnmower lm = new Lawnmower(5, 10, 'W', (x, y) -> true);
-            assertEquals(5, lm.getX());
-            assertEquals(10, lm.getY());
-            assertEquals('W', lm.getDirection());
+    @Test
+    public void should_DecrementX_When_FacingWest_And_Advance() {
+        Lawnmower lm = new Lawnmower(5, 10, 'W', new SurfaceTester(100, 100));
+        lm.executeCommand('A');
 
-            // Finally, we play with the API in order to check if the lawnmower can execute commands properly
-            lm.executeCommand('A');
-            assertEquals(4, lm.getX());
-            assertEquals(10, lm.getY());
-            assertEquals('W', lm.getDirection());
+        //X is decremented. Other members are not updated.
+        assertEquals(4, lm.getX());
+        assertEquals(10, lm.getY());
+        assertEquals('W', lm.getDirection());
+    }
 
-            lm.executeCommand('G');
-            assertEquals(4, lm.getX());
-            assertEquals(10, lm.getY());
-            assertEquals('S', lm.getDirection());
+    @Test
+    public void should_NotUpdateX_When_FacingWest_And_TouchingWestFence_And_Advance() {
+        Lawnmower lm = new Lawnmower(0, 10, 'W', new SurfaceTester(100, 100));
+        lm.executeCommand('A');
 
-            lm.executeCommand('A');
-            assertEquals(4, lm.getX());
-            assertEquals(9, lm.getY());
-            assertEquals('S', lm.getDirection());
+        //nothing changed
+        assertEquals(0, lm.getX());
+        assertEquals(10, lm.getY());
+        assertEquals('W', lm.getDirection());
+    }
 
-            lm.executeCommand('G');
-            assertEquals(4, lm.getX());
-            assertEquals(9, lm.getY());
-            assertEquals('E', lm.getDirection());
+    @Test
+    public void should_FaceSouth_When_FacingWest_And_TurnLeft() {
+        Lawnmower lm = new Lawnmower(5, 10, 'W', new SurfaceTester(100, 100));
+        lm.executeCommand('G');
 
-            lm.executeCommand('A');
-            assertEquals(5, lm.getX());
-            assertEquals(9, lm.getY());
-            assertEquals('E', lm.getDirection());
+        //direction is updated
+        assertEquals(5, lm.getX());
+        assertEquals(10, lm.getY());
+        assertEquals('S', lm.getDirection());
+    }
 
-            lm.executeCommand('G');
-            assertEquals(5, lm.getX());
-            assertEquals(9, lm.getY());
-            assertEquals('N', lm.getDirection());
+    @Test
+    public void should_FaceNorth_When_FacingWest_And_TurnRight() {
+        Lawnmower lm = new Lawnmower(5, 10, 'W', new SurfaceTester(100, 100));
+        lm.executeCommand('D');
 
-            lm.executeCommand('A');
-            assertEquals(5, lm.getX());
-            assertEquals(10, lm.getY());
-            assertEquals('N', lm.getDirection());
+        //direction is updated
+        assertEquals(5, lm.getX());
+        assertEquals(10, lm.getY());
+        assertEquals('N', lm.getDirection());
+    }
 
-            lm.executeCommand('G');
-            assertEquals(5, lm.getX());
-            assertEquals(10, lm.getY());
-            assertEquals('W', lm.getDirection());
+    @Test
+    public void should_FaceSouth_When_FacingWest_And_TouchingWestFence_And_TurnLeft() {
+        Lawnmower lm = new Lawnmower(0, 10, 'W', new SurfaceTester(100, 100));
+        lm.executeCommand('G');
 
-            lm.executeCommand('A');
-            assertEquals(4, lm.getX());
-            assertEquals(10, lm.getY());
-            assertEquals('W', lm.getDirection());
+        //direction is updated
+        assertEquals(0, lm.getX());
+        assertEquals(10, lm.getY());
+        assertEquals('S', lm.getDirection());
+    }
 
-            lm.executeCommand('D');
-            assertEquals(4, lm.getX());
-            assertEquals(10, lm.getY());
-            assertEquals('N', lm.getDirection());
+    @Test
+    public void should_FaceNorth_When_FacingWest_And_TouchingWestFence_And_TurnRight() {
+        Lawnmower lm = new Lawnmower(0, 10, 'W', new SurfaceTester(100, 100));
+        lm.executeCommand('D');
 
-            lm.executeCommand('D');
-            assertEquals(4, lm.getX());
-            assertEquals(10, lm.getY());
-            assertEquals('E', lm.getDirection());
+        //direction is updated
+        assertEquals(0, lm.getX());
+        assertEquals(10, lm.getY());
+        assertEquals('N', lm.getDirection());
+    }
 
-            lm.executeCommand('D');
-            assertEquals(4, lm.getX());
-            assertEquals(10, lm.getY());
-            assertEquals('S', lm.getDirection());
+    @Test
+    public void should_IncrementX_When_FacingEast_And_Advance() {
+        Lawnmower lm = new Lawnmower(5, 10, 'E', new SurfaceTester(100, 100));
+        lm.executeCommand('A');
 
-            lm.executeCommand('D');
-            assertEquals(4, lm.getX());
-            assertEquals(10, lm.getY());
-            assertEquals('W', lm.getDirection());
+        //X is incremented. Other members are not updated.
+        assertEquals(6, lm.getX());
+        assertEquals(10, lm.getY());
+        assertEquals('E', lm.getDirection());
+    }
 
-            try {
-                lm.executeCommand('F');
-                fail("executeCommand must fail when parameter not in A, G or D");
-            } catch (IllegalArgumentException e) {
-                assertEquals("Bad command F", e.getMessage());
-            }
-        }
+    @Test
+    public void should_NotUpdateX_When_FacingEast_And_TouchingEastFence_And_Advance() {
+        Lawnmower lm = new Lawnmower(100, 10, 'E', new SurfaceTester(100, 100));
+        lm.executeCommand('A');
+
+        //nothing changed
+        assertEquals(100, lm.getX());
+        assertEquals(10, lm.getY());
+        assertEquals('E', lm.getDirection());
+    }
+
+    @Test
+    public void should_FaceSouth_When_FacingEast_And_TurnRight() {
+        Lawnmower lm = new Lawnmower(5, 10, 'E', new SurfaceTester(100, 100));
+        lm.executeCommand('D');
+
+        //direction is updated
+        assertEquals(5, lm.getX());
+        assertEquals(10, lm.getY());
+        assertEquals('S', lm.getDirection());
+    }
+
+    @Test
+    public void should_FaceNorth_When_FacingEast_And_TurnLeft() {
+        Lawnmower lm = new Lawnmower(5, 10, 'E', new SurfaceTester(100, 100));
+        lm.executeCommand('G');
+
+        //direction is updated
+        assertEquals(5, lm.getX());
+        assertEquals(10, lm.getY());
+        assertEquals('N', lm.getDirection());
+    }
+
+    @Test
+    public void should_FaceSouth_When_FacingEast_And_TouchingEastFence_And_TurnRight() {
+        Lawnmower lm = new Lawnmower(100, 10, 'E', new SurfaceTester(100, 100));
+        lm.executeCommand('D');
+
+        //direction is updated
+        assertEquals(100, lm.getX());
+        assertEquals(10, lm.getY());
+        assertEquals('S', lm.getDirection());
+    }
+
+    @Test
+    public void should_FaceNorth_When_FacingEast_And_TouchingEastFence_And_TurnLeft() {
+        Lawnmower lm = new Lawnmower(100, 10, 'E', new SurfaceTester(100, 100));
+        lm.executeCommand('G');
+
+        //direction is updated
+        assertEquals(100, lm.getX());
+        assertEquals(10, lm.getY());
+        assertEquals('N', lm.getDirection());
+    }
+
+    @Test
+    public void should_DecrementY_When_FacingSouth_And_Advance() {
+        Lawnmower lm = new Lawnmower(5, 10, 'S', new SurfaceTester(100, 100));
+        lm.executeCommand('A');
+
+        //Y is decremented. Other members are not updated.
+        assertEquals(5, lm.getX());
+        assertEquals(9, lm.getY());
+        assertEquals('S', lm.getDirection());
+    }
+
+    @Test
+    public void should_NotUpdateY_When_FacingSouth_And_TouchingSouthFence_And_Advance() {
+        Lawnmower lm = new Lawnmower(100, 0, 'S', new SurfaceTester(100, 100));
+        lm.executeCommand('A');
+
+        //nothing changed
+        assertEquals(100, lm.getX());
+        assertEquals(0, lm.getY());
+        assertEquals('S', lm.getDirection());
+    }
+
+    @Test
+    public void should_FaceWest_When_FacingSouth_And_TurnRight() {
+        Lawnmower lm = new Lawnmower(5, 10, 'S', new SurfaceTester(100, 100));
+        lm.executeCommand('D');
+
+        //direction is updated
+        assertEquals(5, lm.getX());
+        assertEquals(10, lm.getY());
+        assertEquals('W', lm.getDirection());
+    }
+
+    @Test
+    public void should_FaceEast_When_FacingSouth_And_TurnLeft() {
+        Lawnmower lm = new Lawnmower(5, 10, 'S', new SurfaceTester(100, 100));
+        lm.executeCommand('G');
+
+        //direction is updated
+        assertEquals(5, lm.getX());
+        assertEquals(10, lm.getY());
+        assertEquals('E', lm.getDirection());
+    }
+
+    @Test
+    public void should_FaceWest_When_FacingSouth_And_TouchingSouthFence_And_TurnRight() {
+        Lawnmower lm = new Lawnmower(5, 0, 'S', new SurfaceTester(100, 100));
+        lm.executeCommand('D');
+
+        //direction is updated
+        assertEquals(5, lm.getX());
+        assertEquals(0, lm.getY());
+        assertEquals('W', lm.getDirection());
+    }
+
+    @Test
+    public void should_FaceEast_When_FacingSouth_And_TouchingSouthFence_And_TurnLeft() {
+        Lawnmower lm = new Lawnmower(5, 0, 'S', new SurfaceTester(100, 100));
+        lm.executeCommand('G');
+
+        //direction is updated
+        assertEquals(5, lm.getX());
+        assertEquals(0, lm.getY());
+        assertEquals('E', lm.getDirection());
+    }
+
+    @Test
+    public void should_IncrementY_When_FacingNorth_And_Advance() {
+        Lawnmower lm = new Lawnmower(5, 10, 'N', new SurfaceTester(100, 100));
+        lm.executeCommand('A');
+
+        //Y is incremented. Other members are not updated.
+        assertEquals(5, lm.getX());
+        assertEquals(11, lm.getY());
+        assertEquals('N', lm.getDirection());
+    }
+
+    @Test
+    public void should_NotUpdateY_When_FacingNorth_And_TouchingNorthFence_And_Advance() {
+        Lawnmower lm = new Lawnmower(5, 100, 'N', new SurfaceTester(100, 100));
+        lm.executeCommand('A');
+
+        //nothing changed
+        assertEquals(5, lm.getX());
+        assertEquals(100, lm.getY());
+        assertEquals('N', lm.getDirection());
+    }
+
+    @Test
+    public void should_FaceEast_When_FacingNorth_And_TurnRight() {
+        Lawnmower lm = new Lawnmower(5, 10, 'N', new SurfaceTester(100, 100));
+        lm.executeCommand('D');
+
+        //direction is updated
+        assertEquals(5, lm.getX());
+        assertEquals(10, lm.getY());
+        assertEquals('E', lm.getDirection());
+    }
+
+    @Test
+    public void should_FaceWest_When_FacingNorth_And_TurnLeft() {
+        Lawnmower lm = new Lawnmower(5, 10, 'N', new SurfaceTester(100, 100));
+        lm.executeCommand('G');
+
+        //direction is updated
+        assertEquals(5, lm.getX());
+        assertEquals(10, lm.getY());
+        assertEquals('W', lm.getDirection());
+    }
+
+    @Test
+    public void should_FaceEast_When_FacingNorth_And_TouchingNorthFence_And_TurnRight() {
+        Lawnmower lm = new Lawnmower(5, 100, 'N', new SurfaceTester(100, 100));
+        lm.executeCommand('D');
+
+        //direction is updated
+        assertEquals(5, lm.getX());
+        assertEquals(100, lm.getY());
+        assertEquals('E', lm.getDirection());
+    }
+
+    @Test
+    public void should_FaceWest_When_FacingNorth_And_TouchingNorthFence_And_TurnLeft() {
+        Lawnmower lm = new Lawnmower(5, 100, 'N', new SurfaceTester(100, 100));
+        lm.executeCommand('G');
+
+        //direction is updated
+        assertEquals(5, lm.getX());
+        assertEquals(100, lm.getY());
+        assertEquals('W', lm.getDirection());
     }
 }
