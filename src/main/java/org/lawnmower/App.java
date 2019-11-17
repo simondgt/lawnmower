@@ -17,7 +17,7 @@ public class App {
         }
 
         try {
-            Simulation simulation = SimulationBuilder.newStory(new InputFIleIterator(new File(args[0])));
+            Simulation simulation = SimulationBuilder.newSimulation(new InputFIleIterator(new File(args[0])));
             System.out.println(simulation.run());
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());

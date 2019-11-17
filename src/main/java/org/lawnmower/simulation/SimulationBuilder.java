@@ -35,12 +35,12 @@ public class SimulationBuilder {
      * @param dataSource string iterator that contains all the inputs required in order to setup a Story.
      * @return a new Story simulation, based on dataSource
      */
-    public static Simulation newStory(Iterator<String> dataSource) {
+    public static Simulation newSimulation(Iterator<String> dataSource) {
 
         //creation of the lawn surface
         Lawn lawn = null;
         if (dataSource.hasNext()) {
-            long[] size = readSurface(dataSource.next());
+            long[] size = readLawn(dataSource.next());
             lawn = new Lawn(size[0], size[1]);
         }
 
@@ -70,7 +70,7 @@ public class SimulationBuilder {
      * @param line line to parse
      * @return two long numbers packed into a long[2]
      */
-    private static long[] readSurface(String line) {
+    private static long[] readLawn(String line) {
         long x, y;
         StringTokenizer tokenizer = new StringTokenizer(line, " ", false);
         if (tokenizer.hasMoreTokens()) {
