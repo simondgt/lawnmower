@@ -14,188 +14,130 @@ public class StoryBuilder {
     /**
      * Helper struct that will be used internally in order to represent the initial position of a lawnmower
      */
-    private static class Init{
+    private static class Init {
 
         public final long x;
         public final long y;
         public final char direction;
 
-        public Init(long x, long y, char direction){
-
+        public Init(long x, long y, char direction) {
             this.x = x;
             this.y = y;
             this.direction = direction;
-
         }
-
     }
 
     /**
-     *  Construct a story by reading content in a string iterator
+     * Construct a story by reading content in a string iterator
+     *
      * @param dataSource string iterator that contains all the inputs required in order to setup a Story.
      * @return a new Story simulation, based on dataSource
      */
-    public static Story newStory(Iterator<String> dataSource){
+    public static Story newStory(Iterator<String> dataSource) {
 
         //creation of the lawn surface
         BiPredicate<Long, Long> surfaceTester = null;
-        if(dataSource.hasNext()) {
-
+        if (dataSource.hasNext()) {
             long[] size = readSurface(dataSource.next());
             surfaceTester = new SurfaceTester(size[0], size[1]);
-
         }
 
         //then, fetch lines two by two and build programs out of them
         boolean hasMorePrograms = dataSource.hasNext();
         List<Program> programs = new ArrayList<>();
 
-        while(hasMorePrograms){
-
+        while (hasMorePrograms) {
             //that line contains the initial state of the lawnmower
             Init init = readInit(dataSource.next());
             hasMorePrograms = dataSource.hasNext();
-
-            if(hasMorePrograms) {
-
+            if (hasMorePrograms) {
                 //that line contains the instructions to apply to the lawnmower
                 String instructions = dataSource.next();
                 hasMorePrograms = dataSource.hasNext();
                 programs.add(new Program(init.x, init.y, init.direction, instructions, surfaceTester));
-
             }
-
         }
-
-        return new Story(surfaceTester,programs);
-
+        return new Story(surfaceTester, programs);
     }
 
     /**
      * That helper method converts a string into 2 long values, separated by spaces.
      * Here we can handle several spaces delimiter, and we can catch several bad cases during parsing.
      * If the parsing doesn't go well, we trow an IllegalArgumentException
+     *
      * @param line line to parse
      * @return two long numbers packed into a long[2]
      */
-    private static long[] readSurface(String line){
-
+    private static long[] readSurface(String line) {
         long x, y;
         StringTokenizer tokenizer = new StringTokenizer(line, " ", false);
-
-        if(tokenizer.hasMoreTokens()){
-
+        if (tokenizer.hasMoreTokens()) {
             try {
-
                 x = Long.parseLong(tokenizer.nextToken().trim());
-
-            }catch(NumberFormatException e){
-
-                throw new IllegalArgumentException("ParseError : Input doesn't respect the specification : " + line );
-
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("ParseError : Input doesn't respect the specification : " + line);
             }
-
         } else {
-
-            throw new IllegalArgumentException("ParseError : Input doesn't respect the specification : " + line );
-
+            throw new IllegalArgumentException("ParseError : Input doesn't respect the specification : " + line);
         }
 
-        if(tokenizer.hasMoreTokens()){
-
+        if (tokenizer.hasMoreTokens()) {
             try {
-
                 y = Long.parseLong(tokenizer.nextToken().trim());
-
-            }catch(NumberFormatException e){
-
-                throw new IllegalArgumentException("ParseError : Input doesn't respect the specification : " + line );
-
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("ParseError : Input doesn't respect the specification : " + line);
             }
-
         } else {
-
-            throw new IllegalArgumentException("ParseError : Input doesn't respect the specification : " + line );
-
+            throw new IllegalArgumentException("ParseError : Input doesn't respect the specification : " + line);
         }
 
-        return new long[]{x,y};
-
+        return new long[]{x, y};
     }
 
     /**
      * That Helper method converts a string into a lawnmower initial state.
      * Here we can handle several spaces delimiter, and we can catch several bad cases during parsing.
      * If the parsing doesn't go well, we trow an IllegalArgumentException
+     *
      * @param line line to parse
      * @return an lawnmower initial state
      */
-    private static Init readInit(String line){
+    private static Init readInit(String line) {
 
-        long x,y;
+        long x, y;
         char direction;
-
         StringTokenizer tokenizer = new StringTokenizer(line, " ", false);
 
-        if(tokenizer.hasMoreTokens()){
-
+        if (tokenizer.hasMoreTokens()) {
             try {
-
                 x = Long.parseLong(tokenizer.nextToken().trim());
-
-            }catch(NumberFormatException e){
-
-                throw new IllegalArgumentException("ParseError bad x : Input doesn't respect the specification : " + line );
-
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("ParseError bad x : Input doesn't respect the specification : " + line);
             }
-
         } else {
-
-            throw new IllegalArgumentException("ParseError bad x : Input doesn't respect the specification : " + line );
-
+            throw new IllegalArgumentException("ParseError bad x : Input doesn't respect the specification : " + line);
         }
 
-        if(tokenizer.hasMoreTokens()){
-
+        if (tokenizer.hasMoreTokens()) {
             try {
-
                 y = Long.parseLong(tokenizer.nextToken().trim());
-
-            }catch(NumberFormatException e){
-
-                throw new IllegalArgumentException("ParseError bad y : Input doesn't respect the specification : " + line );
-
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("ParseError bad y : Input doesn't respect the specification : " + line);
             }
-
         } else {
-
-            throw new IllegalArgumentException("ParseError bad y : Input doesn't respect the specification : " + line );
-
+            throw new IllegalArgumentException("ParseError bad y : Input doesn't respect the specification : " + line);
         }
 
-        if(tokenizer.hasMoreTokens()){
-
+        if (tokenizer.hasMoreTokens()) {
             String directionToken = tokenizer.nextToken().trim();
-            if("NSEW".contains(directionToken)){
-
+            if ("NSEW".contains(directionToken)) {
                 direction = directionToken.charAt(0);
-
             } else {
-
-                throw new IllegalArgumentException("ParseError bad direction: Input doesn't respect the specification : " + line );
-
+                throw new IllegalArgumentException("ParseError bad direction: Input doesn't respect the specification : " + line);
             }
-
-
         } else {
-
-            throw new IllegalArgumentException("ParseError bad direction : Input doesn't respect the specification : " + line );
-
+            throw new IllegalArgumentException("ParseError bad direction : Input doesn't respect the specification : " + line);
         }
-
-        return new Init(x,y,direction);
-
+        return new Init(x, y, direction);
     }
-
-
 }

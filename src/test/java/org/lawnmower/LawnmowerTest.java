@@ -8,51 +8,34 @@ import static org.junit.Assert.fail;
 public class LawnmowerTest {
 
     @Test
-    public void lawnmowerApiTest(){
-
+    public void lawnmowerApiTest() {
         // First of all, we check if the constructor can catch bad cases
         try {
-
             new Lawnmower(-1, 0, 'N', (x, y) -> true);
             fail("Constructor preconditions must throw an exception here.");
-
-        }catch(IllegalArgumentException e){
-
-            assertEquals("Value of X (-1) must be positive.",e.getMessage());
-
+        } catch (IllegalArgumentException e) {
+            assertEquals("Value of X (-1) must be positive.", e.getMessage());
         }
 
         try {
-
             new Lawnmower(0, -1, 'N', (x, y) -> true);
             fail("Constructor preconditions must throw an exception here.");
-
-        }catch(IllegalArgumentException e){
-
-            assertEquals("Value of Y (-1) must be positive.",e.getMessage());
-
+        } catch (IllegalArgumentException e) {
+            assertEquals("Value of Y (-1) must be positive.", e.getMessage());
         }
 
         try {
-
             new Lawnmower(0, 0, 'C', (x, y) -> true);
             fail("Constructor preconditions must throw an exception here.");
-
-        }catch(IllegalArgumentException e){
-
-            assertEquals("Value of Direction (C) must be N, E W or S.",e.getMessage());
-
+        } catch (IllegalArgumentException e) {
+            assertEquals("Value of Direction (C) must be N, E W or S.", e.getMessage());
         }
 
         try {
-
             new Lawnmower(0, 0, 'W', null);
             fail("Constructor preconditions must throw an exception here.");
-
-        }catch(IllegalArgumentException e){
-
-            assertEquals("Surface Tester can't be null.",e.getMessage());
-
+        } catch (IllegalArgumentException e) {
+            assertEquals("Surface Tester can't be null.", e.getMessage());
         }
 
         {
@@ -204,18 +187,11 @@ public class LawnmowerTest {
             assertEquals('W', lm.getDirection());
 
             try {
-
                 lm.executeCommand('F');
                 fail("executeCommand must fail when parameter not in A, G or D");
-
-            }catch(IllegalArgumentException e){
-
+            } catch (IllegalArgumentException e) {
                 assertEquals("Bad command F", e.getMessage());
-
             }
         }
-
-
     }
-
 }
