@@ -1,6 +1,8 @@
-package org.lawnmower;
+package org.lawnmower.simulation.world;
 
 import org.junit.Test;
+import org.lawnmower.simulation.world.Lawnmower;
+import org.lawnmower.simulation.world.SurfaceTester;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;

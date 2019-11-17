@@ -1,6 +1,7 @@
-package org.lawnmower;
+package org.lawnmower.simulation.input;
 
 import org.junit.Test;
+import org.lawnmower.simulation.input.InputFIleIterator;
 
 import java.io.File;
 import java.io.FileNotFoundException;

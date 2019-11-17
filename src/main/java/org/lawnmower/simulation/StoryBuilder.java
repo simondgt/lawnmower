@@ -1,4 +1,7 @@
-package org.lawnmower;
+package org.lawnmower.simulation;
+
+import org.lawnmower.simulation.program.Program;
+import org.lawnmower.simulation.world.SurfaceTester;
 
 import java.util.ArrayList;
 import java.util.Iterator;

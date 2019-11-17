@@ -1,6 +1,8 @@
-package org.lawnmower;
+package org.lawnmower.simulation;
 
 import org.junit.Test;
+import org.lawnmower.simulation.Story;
+import org.lawnmower.simulation.program.Program;
 
 import java.util.ArrayList;
 import java.util.Arrays;

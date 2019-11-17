@@ -1,6 +1,7 @@
-package org.lawnmower;
+package org.lawnmower.simulation.program;
 
 import org.junit.Test;
+import org.lawnmower.simulation.program.Program;
 
 import static org.junit.Assert.*;
 

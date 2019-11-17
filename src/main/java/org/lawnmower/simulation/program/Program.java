@@ -1,4 +1,4 @@
-package org.lawnmower;
+package org.lawnmower.simulation.program;
 
 import java.util.Iterator;
 import java.util.function.BiPredicate;

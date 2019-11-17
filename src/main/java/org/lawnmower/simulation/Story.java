@@ -1,4 +1,7 @@
-package org.lawnmower;
+package org.lawnmower.simulation;
+
+import org.lawnmower.simulation.world.Lawnmower;
+import org.lawnmower.simulation.program.Program;
 
 import java.util.List;
 import java.util.function.BiPredicate;

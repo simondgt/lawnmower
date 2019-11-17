@@ -1,4 +1,4 @@
-package org.lawnmower;
+package org.lawnmower.simulation.input;
 
 import java.io.*;
 import java.util.Iterator;
