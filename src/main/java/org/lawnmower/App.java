@@ -1,8 +1,8 @@
 package org.lawnmower;
 
 
-import org.lawnmower.simulation.Story;
-import org.lawnmower.simulation.StoryBuilder;
+import org.lawnmower.simulation.Simulation;
+import org.lawnmower.simulation.SimulationBuilder;
 import org.lawnmower.simulation.input.InputFIleIterator;
 
 import java.io.File;
@@ -17,8 +17,8 @@ public class App {
         }
 
         try {
-            Story story = StoryBuilder.newStory(new InputFIleIterator(new File(args[0])));
-            System.out.println(story.run());
+            Simulation simulation = SimulationBuilder.newStory(new InputFIleIterator(new File(args[0])));
+            System.out.println(simulation.run());
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
         } catch (IOException e) {

@@ -1,6 +1,5 @@
 package org.lawnmower.simulation.world;
 
-import java.util.function.BiPredicate;
 
 /**
  * This class describe the API and the state related to a lawnmower
@@ -25,7 +24,7 @@ public class Lawnmower {
     /**
      * Reference to the minimalistic surface API. It enables to ask if a new position is valid.
      */
-    private final BiPredicate<Long, Long> surfaceTest;
+    private final Lawn lawn;
 
     /**
      * Create a new Lawnmower with initial position and direction. A valid reference to a surface tester is required
@@ -33,9 +32,9 @@ public class Lawnmower {
      * @param initX         Initial X position of the device
      * @param initY         Initial Y position of the device
      * @param initDirection Initial direction of the device
-     * @param surfaceTest   Reference to the surface tester API
+     * @param lawn   Lawn on which the lawnmower must be used
      */
-    public Lawnmower(long initX, long initY, char initDirection, BiPredicate<Long, Long> surfaceTest) {
+    public Lawnmower(long initX, long initY, char initDirection, Lawn lawn) {
         if (initX < 0) {
             throw new IllegalArgumentException("Value of X (" + initX + ") must be positive.");
         }
@@ -48,14 +47,14 @@ public class Lawnmower {
             throw new IllegalArgumentException("Value of Direction (" + initDirection + ") must be N, E W or S.");
         }
 
-        if (surfaceTest == null) {
+        if (lawn == null) {
             throw new IllegalArgumentException("Surface Tester can't be null.");
         }
 
         this.x = initX;
         this.y = initY;
         this.direction = initDirection;
-        this.surfaceTest = surfaceTest;
+        this.lawn = lawn;
 
     }
 
@@ -129,7 +128,7 @@ public class Lawnmower {
      */
     private void advance() {
         long[] newCoordinates = computeNewCoordinates();
-        if (surfaceTest.test(newCoordinates[0], newCoordinates[1])) {
+        if (lawn.contains(newCoordinates[0], newCoordinates[1])) {
             this.x = newCoordinates[0];
             this.y = newCoordinates[1];
         }

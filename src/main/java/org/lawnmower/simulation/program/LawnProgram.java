@@ -1,14 +1,15 @@
 package org.lawnmower.simulation.program;
 
+import org.lawnmower.simulation.world.Lawn;
+
 import java.util.Iterator;
-import java.util.function.BiPredicate;
 
 /**
  * A program contains all the information needed to setup and move a lawnmower.
  * It can be consume by a Story as an iterator of characters. Every character will be interpreted as a command
  * for the lawnmower.
  */
-public class Program implements Iterator<Character> {
+public class LawnProgram implements Iterator<Character> {
 
     /**
      * Initial X position of Lawnmower
@@ -42,9 +43,9 @@ public class Program implements Iterator<Character> {
      * @param initY         initial Y position of the lawnmower
      * @param initDir       initial direction of the lawnmower
      * @param instructions  sequence of instructions to be executed. Can't be null. Can only contain 'A', 'G' or 'D'
-     * @param surfaceTester predicate that enables to check if initial coordinates are in the lawn surface
+     * @param lawn          lawn on which the lawnmower will execute their program
      */
-    public Program(long initX, long initY, char initDir, String instructions, BiPredicate<Long, Long> surfaceTester) {
+    public LawnProgram(long initX, long initY, char initDir, String instructions, Lawn lawn) {
         if (initX < 0) {
             throw new IllegalArgumentException("Value of X (" + initX + ") must be positive.");
         }
@@ -67,11 +68,11 @@ public class Program implements Iterator<Character> {
             }
         }
 
-        if (surfaceTester == null) {
+        if (lawn == null) {
             throw new IllegalArgumentException("SurfaceTester is null.");
         }
 
-        if (!surfaceTester.test(initX, initY)) {
+        if (!lawn.contains(initX, initY)) {
             throw new IllegalArgumentException("Coordinates (" + initX + "," + initY + ") don't belong to surface.");
         }
         this.initX = initX;

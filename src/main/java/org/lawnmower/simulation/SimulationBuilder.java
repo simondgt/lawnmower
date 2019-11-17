@@ -1,18 +1,17 @@
 package org.lawnmower.simulation;
 
-import org.lawnmower.simulation.program.Program;
-import org.lawnmower.simulation.world.SurfaceTester;
+import org.lawnmower.simulation.program.LawnProgram;
+import org.lawnmower.simulation.world.Lawn;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.function.BiPredicate;
 
 /**
  * This builder is in charge of constructing a new story from an input stream (string iterator)
  */
-public class StoryBuilder {
+public class SimulationBuilder {
 
     /**
      * Helper struct that will be used internally in order to represent the initial position of a lawnmower
@@ -36,18 +35,18 @@ public class StoryBuilder {
      * @param dataSource string iterator that contains all the inputs required in order to setup a Story.
      * @return a new Story simulation, based on dataSource
      */
-    public static Story newStory(Iterator<String> dataSource) {
+    public static Simulation newStory(Iterator<String> dataSource) {
 
         //creation of the lawn surface
-        BiPredicate<Long, Long> surfaceTester = null;
+        Lawn lawn = null;
         if (dataSource.hasNext()) {
             long[] size = readSurface(dataSource.next());
-            surfaceTester = new SurfaceTester(size[0], size[1]);
+            lawn = new Lawn(size[0], size[1]);
         }
 
         //then, fetch lines two by two and build programs out of them
         boolean hasMorePrograms = dataSource.hasNext();
-        List<Program> programs = new ArrayList<>();
+        List<LawnProgram> lawnPrograms = new ArrayList<>();
 
         while (hasMorePrograms) {
             //that line contains the initial state of the lawnmower
@@ -57,10 +56,10 @@ public class StoryBuilder {
                 //that line contains the instructions to apply to the lawnmower
                 String instructions = dataSource.next();
                 hasMorePrograms = dataSource.hasNext();
-                programs.add(new Program(init.x, init.y, init.direction, instructions, surfaceTester));
+                lawnPrograms.add(new LawnProgram(init.x, init.y, init.direction, instructions, lawn));
             }
         }
-        return new Story(surfaceTester, programs);
+        return new Simulation(lawn, lawnPrograms);
     }
 
     /**

@@ -1,50 +1,50 @@
 package org.lawnmower.simulation;
 
+import org.lawnmower.simulation.program.LawnProgram;
+import org.lawnmower.simulation.world.Lawn;
 import org.lawnmower.simulation.world.Lawnmower;
-import org.lawnmower.simulation.program.Program;
 
 import java.util.List;
-import java.util.function.BiPredicate;
 
 /**
  * This represents the simulation world. It contains the lawn surface and all the program to be executed.
  * The run method will execute all the programs sequentially and print final state of lawnmower on stdout.
  */
-public class Story {
+public class Simulation {
 
     /**
      * The lawn surface. It's API falls down to a simple predicate : whether some coordinates are in the lawn or not
      */
-    private final BiPredicate<Long, Long> surfaceTester;
+    private final Lawn lawn;
 
     /**
      * List of programs that will be executed.
      */
-    private final List<Program> programs;
+    private final List<LawnProgram> lawnPrograms;
 
     /**
      * Create a new story with a lawn surface and programs to execute.
      *
-     * @param surfaceTester lawn surface. Can't be null
-     * @param programs      Programs to execute. Can't be null
+     * @param lawn lawn surface. Can't be null
+     * @param lawnPrograms Programs to execute. Can't be null
      */
-    public Story(BiPredicate<Long, Long> surfaceTester, List<Program> programs) {
-        if (surfaceTester == null) {
+    Simulation(Lawn lawn, List<LawnProgram> lawnPrograms) {
+        if (lawn == null) {
             throw new IllegalArgumentException("SurfaceTester is null.");
         }
 
-        if (programs == null) {
+        if (lawnPrograms == null) {
             throw new IllegalArgumentException("Programs is null.");
         }
 
-        for (Program p : programs) {
+        for (LawnProgram p : lawnPrograms) {
             if (p == null) {
                 throw new IllegalArgumentException("At least on program is null.");
             }
         }
 
-        this.surfaceTester = surfaceTester;
-        this.programs = programs;
+        this.lawn = lawn;
+        this.lawnPrograms = lawnPrograms;
     }
 
     /**
@@ -53,8 +53,8 @@ public class Story {
     public String run() {
 
         StringBuilder builder = new StringBuilder();
-        for (Program pg : programs) {
-            Lawnmower lm = new Lawnmower(pg.getInitX(), pg.getInitY(), pg.getInitDirection(), surfaceTester);
+        for (LawnProgram pg : lawnPrograms) {
+            Lawnmower lm = new Lawnmower(pg.getInitX(), pg.getInitY(), pg.getInitDirection(), lawn);
             while (pg.hasNext()) {
                 lm.executeCommand(pg.next());
             }

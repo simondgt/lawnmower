@@ -4,11 +4,11 @@ Short coding exercise written in Java 11
 This codebase is designed around very simple ideas and concepts that are assembled together.
 It is composed of a few different parts :
 - A Lawnmower class that contains the state of a Lawnmower and a simple API to access/alter that state
-- A Program class that contains initial state of a Lawnmower and all the commands we want to apply on that lawnmower (turn left,  turn right, advance)
-- A SurfaceTester API that tells if a given position is valid or not
-- A Story, that can simulate the execution of programs over a given surface
-- A StoryBuilder, that build a Story based on specified input. That input is defined by some specifications..
-- A InputFileIterator that opens a file and serves it to a StoryBuilder as an input stream
+- A LawnProgram class that contains initial state of a Lawnmower and all the commands we want to apply on that lawnmower (turn left,  turn right, advance)
+- A Lawn that can tell if a given position is valid or not
+- A Simulation, that can simulate the execution of lawnPrograms over a given lawn
+- A SimulationBuilder, that build a Simulation based on specified input. That input is defined by some specifications.
+- A InputFileIterator that opens a file and serves it to a SimulationBuilder as an input stream
 - App is the main class that takes care of arguments and world set up. It also notifies user if an error occurred.
 
 The final results are printed on stdout.
