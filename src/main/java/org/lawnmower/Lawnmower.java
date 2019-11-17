@@ -89,7 +89,7 @@ public class Lawnmower {
     /**
      * Update direction of device based on previous direction.
      */
-    public void turnLeft() {
+    private void turnLeft() {
         switch (direction) {
             case 'N':
                 direction = 'W';
@@ -108,7 +108,7 @@ public class Lawnmower {
     /**
      * Update direction of device based on previous direction.
      */
-    public void turnRight() {
+    private void turnRight() {
         switch (direction) {
             case 'N':
                 direction = 'E';
@@ -127,7 +127,7 @@ public class Lawnmower {
     /**
      * Try to advance the device. The movement is committed only if the surface tester accepts the new coordinates.
      */
-    public void advance() {
+    private void advance() {
         long[] newCoordinates = computeNewCoordinates();
         if (surfaceTest.test(newCoordinates[0], newCoordinates[1])) {
             this.x = newCoordinates[0];
