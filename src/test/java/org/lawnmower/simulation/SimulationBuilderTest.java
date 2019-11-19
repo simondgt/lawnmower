@@ -2,6 +2,9 @@ package org.lawnmower.simulation;
 
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -287,7 +290,6 @@ public class SimulationBuilderTest {
         }
     }
 
-    //TODO: move to SimulationRunTest
     @Test
     public void should_RunSimulation_When_ValidInput() {
         List<String> input = new ArrayList<>();
@@ -298,5 +300,31 @@ public class SimulationBuilderTest {
         String out = simulation.run();
         assertEquals("1 5 N", out);
     }
+
+    @Test
+    public void should_ThrowException_When_FileNotFound() {
+        try {
+            SimulationBuilder.fromFile(new File("test/bad"));
+            fail("file doesn't exits");
+        } catch (FileNotFoundException e) {
+            assertEquals("test/bad (No such file or directory)", e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void should_BuildSimulation_When_FileExists() {
+        try {
+            Simulation simulation = SimulationBuilder.fromFile(new File("test/input1"));
+            assertNotNull(simulation);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+
 
 }

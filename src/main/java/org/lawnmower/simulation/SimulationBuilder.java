@@ -3,13 +3,19 @@ package org.lawnmower.simulation;
 import org.lawnmower.simulation.program.LawnProgram;
 import org.lawnmower.simulation.world.Lawn;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 /**
- * This builder is in charge of constructing a new story from an input stream (string iterator)
+ * This builder is in charge of constructing a new simulation from an input stream (string iterator)
+ * It also provides a helper function that load an input stream out of a file.
  */
 public class SimulationBuilder {
 
@@ -62,6 +68,19 @@ public class SimulationBuilder {
         return new Simulation(lawn, lawnPrograms);
     }
 
+    /**
+     * Read a file and builds a simulation
+     * @param file file to read
+     * @return new simulation or throw exception if input is not valid
+     * @throws IOException IOException can occur during IO operations
+     */
+    public static Simulation fromFile(File file) throws IOException {
+        List<String> list;
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            list = br.lines().collect(Collectors.toList());
+        }
+        return newSimulation(list.iterator());
+    }
     /**
      * That helper method converts a string into 2 long values, separated by spaces.
      * Here we can handle several spaces delimiter, and we can catch several bad cases during parsing.
